@@ -1,5 +1,8 @@
 package io.qase.commons.kotlin.models
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class TestResultExecution(
     var startTime: Long? = null,
     var status: TestResultStatus? = null,

@@ -1,5 +1,8 @@
 package io.qase.commons.kotlin.models
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class StepExecution(
     var status: StepResultStatus = StepResultStatus.UNTESTED,
     var startTime: Long = System.currentTimeMillis(),
