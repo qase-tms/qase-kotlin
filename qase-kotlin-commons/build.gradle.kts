@@ -3,15 +3,14 @@ plugins {
     kotlin("plugin.serialization") version "1.9.24"
 }
 
-group = "io.qase.commons.kotlin"
-version = "1.0.0"
-
 repositories {
     mavenCentral()
+    mavenLocal()
 }
 
 dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.1")
+    implementation("junit:junit:4.13.2")
     testImplementation(kotlin("test"))
 }
 
@@ -20,4 +19,19 @@ tasks.test {
 }
 kotlin {
     jvmToolchain(11)
+}
+
+subprojects {
+    apply(plugin = "maven-publish")
+
+    publishing {
+        publications {
+            create<MavenPublication>("mavenJava") {
+                from(components["java"])
+            }
+        }
+        repositories {
+            mavenLocal()
+        }
+    }
 }

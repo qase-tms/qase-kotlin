@@ -8,8 +8,8 @@ import java.nio.file.Files
 import java.nio.file.Paths
 
 class FileWriter(path: String) : Writer {
-    private val resultsPath: String = Paths.get(System.getProperty("user.dir"), path, "results").toString();
-    private val attachmentsPath: String = Paths.get(System.getProperty("user.dir"), path, "attachments").toString();
+    private val resultsPath: String = Paths.get(path, "results").toString();
+    private val attachmentsPath: String = Paths.get(path, "attachments").toString();
 
     private val mapper: Json = Json {
         prettyPrint = true
@@ -21,7 +21,7 @@ class FileWriter(path: String) : Writer {
     }
 
     override fun writeResult(testResult: TestResult) {
-        val file = Paths.get(resultsPath, testResult.id).toFile()
+        val file = Paths.get(resultsPath, (testResult.id + ".json")).toFile()
         try {
             val json = mapper.encodeToString(TestResult.serializer(), testResult)
             file.writeText(json)
