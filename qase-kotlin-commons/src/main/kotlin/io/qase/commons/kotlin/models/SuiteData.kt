@@ -4,6 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class SuiteData(
-    val title: String = "",
-    val publicId: Int? = null,
+    var title: String = "",
+    var publicId: Int? = null,
 )

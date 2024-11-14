@@ -2,7 +2,7 @@ plugins {
     java
     kotlin("jvm") version "1.9.24"
     kotlin("plugin.serialization") version "1.9.24"
-    `maven-publish`
+    id("maven-publish")
 }
 
 val gradleScriptDir by extra("${rootProject.projectDir}/gradle")
@@ -16,7 +16,7 @@ buildscript {
     dependencies {
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.24")
         classpath("org.jetbrains.kotlin:kotlin-android-extensions:1.9.24")
-        classpath("com.android.tools.build:gradle:4.2.1")
+        classpath("com.android.tools.build:gradle:8.6.1")
     }
 }
 
@@ -36,7 +36,7 @@ allprojects {
     }
 }
 
-configure(subprojects) {
+configure(subprojects.filter { !it.name.contains("android") }) {
     apply(plugin = "maven-publish")
     apply(plugin = "org.jetbrains.kotlin.jvm")
 

@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Suite(
-    val data: MutableList<SuiteData> = mutableListOf(),
+    var data: MutableList<SuiteData> = mutableListOf(),
 )

@@ -5,7 +5,6 @@ import io.qase.commons.kotlin.models.TestResult
 import io.qase.commons.kotlin.models.TestResultStatus
 import io.qase.commons.kotlin.storage.CasesStorage
 import io.qase.commons.kotlin.storage.StepStorage
-import io.qase.commons.kotlin.writer.FileWriter
 import io.qase.commons.kotlin.writer.Writer
 import org.junit.runner.Description
 import org.junit.runner.notification.RunListener
@@ -14,7 +13,7 @@ import java.io.PrintWriter
 import java.io.StringWriter
 
 
-class QaseListener(private val writer: Writer = FileWriter("Download")) : RunListener() {
+class QaseJunit4Listener(private val writer: Writer) : RunListener() {
     private val methods = mutableSetOf<String>()
 
     override fun testStarted(description: Description) {

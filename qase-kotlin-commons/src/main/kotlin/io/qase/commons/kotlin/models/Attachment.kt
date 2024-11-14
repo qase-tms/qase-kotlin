@@ -5,9 +5,9 @@ import java.util.*
 
 @Serializable
 data class Attachment (
-    val id: String = UUID.randomUUID().toString(),
-    val fileName: String? = null,
-    val mimeType: String? = null,
-    val content: String? = null,
-    val filePath: String? = null
+    var id: String = UUID.randomUUID().toString(),
+    var fileName: String? = null,
+    var mimeType: String? = null,
+    var content: String? = null,
+    var filePath: String? = null
 )

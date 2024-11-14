@@ -4,8 +4,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class StepData(
-    val action: String? = null,
-    val expectedResult: String? = null,
-    val inputData: String? = null,
-    val attachments: MutableList<String> = mutableListOf()
+    var action: String? = null,
+    var expectedResult: String? = null,
+    var inputData: String? = null,
+    var attachments: MutableList<String> = mutableListOf()
 )

@@ -4,5 +4,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Relations (
-    val suite: Suite = Suite(),
+    var suite: Suite = Suite(),
 )
