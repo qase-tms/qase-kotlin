@@ -1,10 +1,12 @@
 package io.qase.commons.kotlin.listener
 
+import io.qase.commons.kotlin.models.Attachment
 import io.qase.commons.kotlin.models.Relations
 import io.qase.commons.kotlin.models.TestResult
 import io.qase.commons.kotlin.models.TestResultStatus
 import io.qase.commons.kotlin.storage.CasesStorage
 import io.qase.commons.kotlin.storage.StepStorage
+import io.qase.commons.kotlin.writer.FileWriter
 import io.qase.commons.kotlin.writer.Writer
 import org.junit.runner.Description
 import org.junit.runner.notification.RunListener
@@ -13,8 +15,21 @@ import java.io.PrintWriter
 import java.io.StringWriter
 
 
-class QaseJunit4Listener(private val writer: Writer) : RunListener() {
+class QaseJunit4Listener(private val writer: Writer = FileWriter("qase-results")) : RunListener() {
     private val methods = mutableSetOf<String>()
+
+    fun addAttachments(vararg attachments: Attachment) {
+        val processedAttachments = attachments.map { attachment ->
+            val path = writer.writeAttachment(attachment)
+            attachment.copy(filePath = path)
+        }
+
+        if (StepStorage.isStepInProgress()) {
+            StepStorage.getCurrentStep().execution.attachments.addAll(processedAttachments)
+        } else {
+            CasesStorage.getCurrentCase().attachments.addAll(processedAttachments)
+        }
+    }
 
     override fun testStarted(description: Description) {
         val resultCreate = startTestCase(description)

@@ -18,7 +18,7 @@ class TestStorageResultsWriter : Writer {
         outputStreamResultsWriter.writeResult(testResult)
     }
 
-    override fun writeAttachment(attachment: Attachment) {
-        outputStreamResultsWriter.writeAttachment(attachment)
+    override fun writeAttachment(attachment: Attachment): String {
+        return outputStreamResultsWriter.writeAttachment(attachment)
     }
 }

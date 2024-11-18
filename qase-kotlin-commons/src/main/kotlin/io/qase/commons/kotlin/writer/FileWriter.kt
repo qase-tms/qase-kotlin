@@ -30,7 +30,7 @@ class FileWriter(path: String) : Writer {
         }
     }
 
-    override fun writeAttachment(attachment: Attachment) {
+    override fun writeAttachment(attachment: Attachment): String {
         if (attachment.filePath != null) {
             val file = Paths.get(attachmentsPath, attachment.id)
             try {
@@ -46,6 +46,8 @@ class FileWriter(path: String) : Writer {
         } catch (e: IOException) {
             throw Exception("Could not write attachment", e)
         }
+
+        return attachment.id
     }
 
     private fun prepare() {

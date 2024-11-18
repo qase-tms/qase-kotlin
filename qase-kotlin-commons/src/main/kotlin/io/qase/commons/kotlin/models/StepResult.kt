@@ -1,6 +1,6 @@
 package io.qase.commons.kotlin.models
 
-import kotlinx.serialization.Contextual
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import java.util.UUID
 
@@ -8,10 +8,8 @@ import java.util.UUID
 data class StepResult(
     var id: String = UUID.randomUUID().toString(),
     var data: StepData = StepData(),
+    @SerialName("parent_id")
     var parentId: String? = null,
     var execution: StepExecution = StepExecution(),
-    @Contextual
-    var throwable: Throwable? = null,
-    var attachments: MutableList<String> = mutableListOf(),
     var steps: MutableList<StepResult> = mutableListOf()
 )
