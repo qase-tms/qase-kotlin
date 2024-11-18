@@ -18,19 +18,6 @@ import java.io.StringWriter
 class QaseJunit4Listener(private val writer: Writer = FileWriter("qase-results")) : RunListener() {
     private val methods = mutableSetOf<String>()
 
-    fun addAttachments(vararg attachments: Attachment) {
-        val processedAttachments = attachments.map { attachment ->
-            val path = writer.writeAttachment(attachment)
-            attachment.copy(filePath = path)
-        }
-
-        if (StepStorage.isStepInProgress()) {
-            StepStorage.getCurrentStep().execution.attachments.addAll(processedAttachments)
-        } else {
-            CasesStorage.getCurrentCase().attachments.addAll(processedAttachments)
-        }
-    }
-
     override fun testStarted(description: Description) {
         val resultCreate = startTestCase(description)
         CasesStorage.startCase(resultCreate)
@@ -72,6 +59,39 @@ class QaseJunit4Listener(private val writer: Writer = FileWriter("qase-results")
         }
     }
 
+    fun addAttachments(vararg attachments: Attachment) {
+        val processedAttachments = attachments.map { attachment ->
+            val path = writer.writeAttachment(attachment)
+            attachment.copy(filePath = path)
+        }
+
+        if (StepStorage.isStepInProgress()) {
+            StepStorage.getCurrentStep().execution.attachments.addAll(processedAttachments)
+        } else {
+            CasesStorage.getCurrentCase().attachments.addAll(processedAttachments)
+        }
+    }
+
+    fun addIdToCurrentCase(id: Long) {
+        CasesStorage.getCurrentCase().testopsId = id
+    }
+
+    fun addCommentToCurrentCase(comment: String) {
+        CasesStorage.getCurrentCase().message = comment
+    }
+
+    fun addTitleToCurrentCase(title: String) {
+        CasesStorage.getCurrentCase().title = title
+    }
+
+    fun addFieldsToCurrentCase(fields: Map<String, String>) {
+        CasesStorage.getCurrentCase().fields.putAll(fields)
+    }
+
+    fun addParametersToCurrentCase(params: Map<String, String>) {
+        CasesStorage.getCurrentCase().params.putAll(params)
+    }
+
     private fun addIfNotPresent(description: Description): Boolean {
         val methodFullName = description.className + description.methodName
         return if (methods.contains(methodFullName)) {
@@ -84,23 +104,6 @@ class QaseJunit4Listener(private val writer: Writer = FileWriter("qase-results")
 
     private fun startTestCase(description: Description): TestResult {
         val resultCreate = TestResult()
-//        if (getQaseIgnore(description)) {
-//            resultCreate.ignore = true
-//            return resultCreate
-//        }
-
-//        val caseId = getCaseId(description)
-//        val caseTitle = getCaseTitle(description)
-//        val fields = getQaseFields(description)
-//        val suite = getQaseSuite(description)
-//        val relations = Relations()
-
-//        suite?.split("\t")?.forEach { part ->
-//            val data = SuiteData().apply { title = part }
-//            relations.suite.data.add(data)
-//        } ?: run {
-//            relations.suite.data.add(SuiteData().apply { title = description.className })
-//        }
 
         resultCreate.execution.startTime = System.currentTimeMillis()
         resultCreate.testopsId = null
@@ -115,7 +118,6 @@ class QaseJunit4Listener(private val writer: Writer = FileWriter("qase-results")
     private fun stopTestCase(status: TestResultStatus, error: Throwable?): TestResult? {
         val resultCreate = CasesStorage.getCurrentCase()
         CasesStorage.stopCase()
-//        if (resultCreate.ignore) return null
 
         val comment = error?.toString()
         val stacktrace = error?.let { getStacktrace(it) }
@@ -138,40 +140,6 @@ class QaseJunit4Listener(private val writer: Writer = FileWriter("qase-results")
         throwable.printStackTrace(PrintWriter(stringWriter))
         return stringWriter.toString()
     }
-
-//    private fun getCaseId(description: Description): Long? {
-//        return getQaseId(description) ?: description.getAnnotation(CaseId::class.java)?.value()
-//    }
-//
-//    private fun getCaseTitle(description: Description): String {
-//        return getQaseTitle(description)
-//            ?: description.getAnnotation(CaseTitle::class.java)?.value()
-//            ?: description.methodName
-//    }
-//
-//    private fun getQaseId(description: Description): Long? {
-//        return description.getAnnotation(QaseId::class.java)?.value()
-//    }
-//
-//    private fun getQaseTitle(description: Description): String? {
-//        return description.getAnnotation(QaseTitle::class.java)?.value()
-//    }
-//
-//    private fun getQaseIgnore(description: Description): Boolean {
-//        return description.getAnnotation(QaseIgnore::class.java) != null
-//    }
-//
-//    private fun getQaseSuite(description: Description): String? {
-//        return description.getAnnotation(QaseSuite::class.java)?.value()
-//    }
-//
-//    private fun getQaseFields(description: Description): Map<String, String> {
-//        val fields = mutableMapOf<String, String>()
-//        description.getAnnotation(QaseFields::class.java)?.value?.forEach { field ->
-//            fields[field.name] = field.value
-//        }
-//        return fields
-//    }
 
     private fun generateSignature(description: Description, qaseId: Long?, parameters: Map<String, String>?): String {
         val className = description.className.lowercase().replace(".", ":")
