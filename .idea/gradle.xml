@@ -11,9 +11,9 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/qase-kaspresso-reporter" />
             <option value="$PROJECT_DIR$/qase-kotlin-android" />
             <option value="$PROJECT_DIR$/qase-kotlin-commons" />
-            <option value="$PROJECT_DIR$/qase-kotlin-kaspresso" />
           </set>
         </option>
       </GradleProjectSettings>

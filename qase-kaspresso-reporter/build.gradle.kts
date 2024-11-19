@@ -53,7 +53,8 @@ tasks.register<Javadoc>("androidJavadocs") {
         "http://docs.oracle.com/javase/7/docs/api/",
         "http://developer.android.com/reference/",
         "http://hc.apache.org/httpcomponents-client-5.0.x/httpclient5/apidocs/",
-        "http://hc.apache.org/httpcomponents-core-5.0.x/httpcore5/apidocs/")
+        "http://hc.apache.org/httpcomponents-core-5.0.x/httpcore5/apidocs/"
+    )
 }
 
 tasks.register<Jar>("androidJavadocsJar") {
@@ -75,7 +76,7 @@ publishing {
                 from(components["release"])
             }
             groupId = "io.qase"
-            artifactId = "qase-kotlin-kaspresso"
+            artifactId = "qase-kaspresso-reporter"
             version = "1.0.0"
         }
     }
