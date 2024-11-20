@@ -27,4 +27,9 @@ object Qase {
     fun parameters(params: Map<String, String>) {
         Qase.listener.addParametersToCurrentCase(params)
     }
+
+    @JvmStatic
+    fun ignore() {
+        Qase.listener.addIgnoreToCurrentCase()
+    }
 }

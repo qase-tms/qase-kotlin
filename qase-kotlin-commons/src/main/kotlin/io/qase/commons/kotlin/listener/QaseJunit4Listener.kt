@@ -92,6 +92,10 @@ class QaseJunit4Listener(private val writer: Writer = FileWriter("qase-results")
         CasesStorage.getCurrentCase().params.putAll(params)
     }
 
+    fun addIgnoreToCurrentCase() {
+        CasesStorage.getCurrentCase().ignore = true
+    }
+
     private fun addIfNotPresent(description: Description): Boolean {
         val methodFullName = description.className + description.methodName
         return if (methods.contains(methodFullName)) {
@@ -118,6 +122,10 @@ class QaseJunit4Listener(private val writer: Writer = FileWriter("qase-results")
     private fun stopTestCase(status: TestResultStatus, error: Throwable?): TestResult? {
         val resultCreate = CasesStorage.getCurrentCase()
         CasesStorage.stopCase()
+
+        if (resultCreate.ignore) {
+            return null
+        }
 
         val comment = error?.toString()
         val stacktrace = error?.let { getStacktrace(it) }

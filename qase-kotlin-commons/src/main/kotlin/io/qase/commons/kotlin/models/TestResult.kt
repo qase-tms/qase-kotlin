@@ -2,6 +2,7 @@ package io.qase.commons.kotlin.models
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 import java.util.*
 
 @Serializable
@@ -9,6 +10,8 @@ data class TestResult(
     var id: String = UUID.randomUUID().toString(),
     var title: String? = null,
     var signature: String? = null,
+    @Transient
+    var ignore: Boolean = false,
     @SerialName("run_id")
     var runId: String? = null,
     @SerialName("testops_id")

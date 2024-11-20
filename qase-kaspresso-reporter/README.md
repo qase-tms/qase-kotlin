@@ -94,6 +94,8 @@ reliable binding between your automated tests and test cases, even if you rename
 - **`Qase.title`**: Set the title of the test case.
 - **`Qase.fields`**: Set custom fields for the test case.
 - **`Qase.parameters`**: Specify the parameters for the test case.
+- **`Qase.ignore`**: Ignore the test case. The test will execute, but the results will not be reported to Qase.io.
+- **`Qase.comment`**: Add a comment to the test case.
 
 For detailed instructions on using annotations and methods, refer to [Usage](./docs/usage.md).
 
@@ -126,6 +128,7 @@ class QaseSupportTest : TestCase(
 
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
         assertEquals("com.example.kaspresso", appContext.packageName)
+        Qase.comment("Some comment")
     }
 }
 ```
