@@ -1,11 +1,8 @@
+description = "Qase Kotlin Commons"
+
 plugins {
     kotlin("jvm") version "1.9.24"
     kotlin("plugin.serialization") version "1.9.24"
-}
-
-repositories {
-    mavenCentral()
-    mavenLocal()
 }
 
 dependencies {
@@ -16,22 +13,4 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
-}
-kotlin {
-    jvmToolchain(17)
-}
-
-subprojects {
-    apply(plugin = "maven-publish")
-
-    publishing {
-        publications {
-            create<MavenPublication>("mavenJava") {
-                from(components["java"])
-            }
-        }
-        repositories {
-            mavenLocal()
-        }
-    }
 }
