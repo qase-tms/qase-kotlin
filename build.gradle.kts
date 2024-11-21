@@ -95,14 +95,14 @@ configure(
         (options as StandardJavadocDocletOptions).addStringOption("Xdoclint:none", "-quiet")
     }
 
-    configure<JavaPluginConvention> {
+    java {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
 
     publishing {
         publications {
-            create<MavenPublication>("mavenJava") {
+            create<MavenPublication>("maven") {
                 artifact(javadocJar)
                 artifact(sourceJar)
                 from(components["java"])
@@ -138,14 +138,9 @@ configure(
         }
     }
 
-//    signing {
-//        val signingKeyId: String? by project
-//        val signingKey: String? by project
-//        val signingPassword: String? by project
-//        useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
-//
-//        sign(publishing.publications["maven"])
-//    }
+    signing {
+        sign(publishing.publications["maven"])
+    }
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile>().configureEach {

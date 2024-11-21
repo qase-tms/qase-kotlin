@@ -35,8 +35,6 @@ android {
 dependencies {
     implementation("androidx.test.ext:junit:1.2.1")
     implementation("androidx.test:runner:1.6.2")
-//    implementation("androidx.multidex:multidex:2.0.1")
-//    implementation("androidx.test.uiautomator:uiautomator:2.3.0")
     implementation(project(":qase-kotlin-commons"))
 }
 
@@ -114,12 +112,7 @@ afterEvaluate {
         }
     }
 
-//    signing {
-//        val signingKeyId: String? by project
-//        val signingKey: String? by project
-//        val signingPassword: String? by project
-//        useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
-//
-//        sign(publishing.publications["maven"])
-//    }
+    signing {
+        sign(publishing.publications["maven"])
+    }
 }
