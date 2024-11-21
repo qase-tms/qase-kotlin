@@ -1,7 +1,10 @@
+description = "Qase Kotlin Android Integration"
+
 plugins {
     id("com.android.library")
     kotlin("android")
     id("maven-publish")
+    signing
 }
 
 apply(plugin = "maven-publish")
@@ -14,7 +17,7 @@ repositories {
 
 android {
     namespace = "io.qase.commons.kotlin.android"
-    compileSdkVersion(30)
+    compileSdk = 34
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -30,10 +33,10 @@ android {
 }
 
 dependencies {
-    implementation("androidx.test.ext:junit:1.1.2")
-    implementation("androidx.test:runner:1.4.0")
-    implementation("androidx.multidex:multidex:2.0.1")
-    implementation("androidx.test.uiautomator:uiautomator:2.2.0")
+    implementation("androidx.test.ext:junit:1.2.1")
+    implementation("androidx.test:runner:1.6.2")
+//    implementation("androidx.multidex:multidex:2.0.1")
+//    implementation("androidx.test.uiautomator:uiautomator:2.3.0")
     implementation(project(":qase-kotlin-commons"))
 }
 
@@ -54,7 +57,8 @@ tasks.register<Javadoc>("androidJavadocs") {
         "http://docs.oracle.com/javase/7/docs/api/",
         "http://developer.android.com/reference/",
         "http://hc.apache.org/httpcomponents-client-5.0.x/httpclient5/apidocs/",
-        "http://hc.apache.org/httpcomponents-core-5.0.x/httpcore5/apidocs/")
+        "http://hc.apache.org/httpcomponents-core-5.0.x/httpcore5/apidocs/"
+    )
 }
 
 tasks.register<Jar>("androidJavadocsJar") {
@@ -69,18 +73,53 @@ tasks.register<Jar>("androidSourcesJar") {
     from(android.sourceSets["main"].java.srcDirs)
 }
 
-publishing {
-    publications {
-        create<MavenPublication>("mavenAndroid") {
-            afterEvaluate {
+afterEvaluate {
+    println(components.names)
+
+    publishing {
+        publications {
+            create<MavenPublication>("maven") {
                 from(components["release"])
+                artifact(tasks.getByName<Jar>("androidJavadocsJar"))
+
+                pom {
+                    name.set(project.name)
+                    description.set("Module ${project.name} of Qase Kotlin reporters.")
+                    url.set("https://github.com/qase-tms/qase-kotlin")
+                    licenses {
+                        license {
+                            name.set("The Apache License, Version 2.0")
+                            url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+                        }
+                    }
+                    developers {
+                        developer {
+                            id.set("qase-tms")
+                            name.set("Qase Team")
+                            email.set("support@qase.io")
+                        }
+                    }
+                    scm {
+                        developerConnection.set("scm:git:git://github.com/qase-tms/qase-kotlin")
+                        connection.set("scm:git:git://github.com/qase-tms/qase-kotlin")
+                        url.set("https://github.com/qase-tms/qase-kotlin")
+                    }
+                    issueManagement {
+                        system.set("GitHub Issues")
+                        url.set("https://github.com/qase-tms/qase-kotlin/issue")
+                    }
+                }
             }
-            groupId = "io.qase"
-            artifactId = "qase-kotlin-android"
-            version = "1.0.0"
+
         }
     }
-    repositories {
-        mavenLocal()
-    }
+
+//    signing {
+//        val signingKeyId: String? by project
+//        val signingKey: String? by project
+//        val signingPassword: String? by project
+//        useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
+//
+//        sign(publishing.publications["maven"])
+//    }
 }

@@ -1,7 +1,10 @@
+description = "Qase Kotlin Kaspresso reporter"
+
 plugins {
     id("com.android.library")
     kotlin("android")
     id("maven-publish")
+    signing
 }
 
 apply(plugin = "maven-publish")
@@ -14,7 +17,7 @@ repositories {
 
 android {
     namespace = "io.qase.kaspresso"
-    compileSdkVersion(30)
+    compileSdk = 34
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -69,19 +72,53 @@ tasks.register<Jar>("androidSourcesJar") {
     from(android.sourceSets["main"].java.srcDirs)
 }
 
-publishing {
-    publications {
-        create<MavenPublication>("mavenAndroid") {
-            afterEvaluate {
+afterEvaluate {
+    publishing {
+        publications {
+            create<MavenPublication>("maven") {
                 from(components["release"])
+                artifact(tasks.getByName<Jar>("androidJavadocsJar"))
+
+                pom {
+                    name.set(project.name)
+                    description.set("Module ${project.name} of Qase Kotlin reporters.")
+                    url.set("https://github.com/qase-tms/qase-kotlin")
+                    licenses {
+                        license {
+                            name.set("The Apache License, Version 2.0")
+                            url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+                        }
+                    }
+                    developers {
+                        developer {
+                            id.set("qase-tms")
+                            name.set("Qase Team")
+                            email.set("support@qase.io")
+                        }
+                    }
+                    scm {
+                        developerConnection.set("scm:git:git://github.com/qase-tms/qase-kotlin")
+                        connection.set("scm:git:git://github.com/qase-tms/qase-kotlin")
+                        url.set("https://github.com/qase-tms/qase-kotlin")
+                    }
+                    issueManagement {
+                        system.set("GitHub Issues")
+                        url.set("https://github.com/qase-tms/qase-kotlin/issue")
+                    }
+                }
             }
-            groupId = "io.qase"
-            artifactId = "qase-kaspresso-reporter"
-            version = "1.0.0"
+
         }
     }
-    repositories {
-        mavenLocal()
-    }
+
+//    signing {
+//        val signingKeyId: String? by project
+//        val signingKey: String? by project
+//        val signingPassword: String? by project
+//        useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
+//
+//        sign(publishing.publications["maven"])
+//    }
 }
+
 
