@@ -3,5 +3,6 @@ plugins {
 }
 rootProject.name = "qase-kotlin"
 include("qase-kotlin-commons")
+include("qase-kotlin-junit4")
 include("qase-kotlin-android")
 include("qase-kaspresso-reporter")

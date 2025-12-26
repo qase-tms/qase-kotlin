@@ -14,8 +14,8 @@ data class TestResult(
     var ignore: Boolean = false,
     @SerialName("run_id")
     var runId: String? = null,
-    @SerialName("testops_id")
-    var testopsId: Long? = null,
+    @SerialName("testops_ids")
+    var testopsIds: MutableList<Long> = mutableListOf(),
     var execution: TestResultExecution = TestResultExecution(),
     var fields: MutableMap<String, String> = mutableMapOf(),
     var attachments: MutableList<Attachment> = mutableListOf(),

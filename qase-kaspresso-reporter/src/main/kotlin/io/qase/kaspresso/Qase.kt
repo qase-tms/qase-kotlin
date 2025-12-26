@@ -5,31 +5,36 @@ import io.qase.commons.kotlin.listener.Qase
 object Qase {
     @JvmStatic
     fun id(id: Long) {
-        Qase.listener.addIdToCurrentCase(id)
+        Qase.listener?.addIdToCurrentCase(id)
+    }
+
+    @JvmStatic
+    fun ids(vararg ids: Long) {
+        Qase.listener?.addIdsToCurrentCase(ids.toList())
     }
 
     @JvmStatic
     fun title(title: String) {
-        Qase.listener.addTitleToCurrentCase(title)
+        Qase.listener?.addTitleToCurrentCase(title)
     }
 
     @JvmStatic
     fun fields(fields: Map<String, String>) {
-        Qase.listener.addFieldsToCurrentCase(fields)
+        Qase.listener?.addFieldsToCurrentCase(fields)
     }
 
     @JvmStatic
     fun comment(comment: String) {
-        Qase.listener.addCommentToCurrentCase(comment)
+        Qase.listener?.addCommentToCurrentCase(comment)
     }
 
     @JvmStatic
     fun parameters(params: Map<String, String>) {
-        Qase.listener.addParametersToCurrentCase(params)
+        Qase.listener?.addParametersToCurrentCase(params)
     }
 
     @JvmStatic
     fun ignore() {
-        Qase.listener.addIgnoreToCurrentCase()
+        Qase.listener?.addIgnoreToCurrentCase()
     }
 }

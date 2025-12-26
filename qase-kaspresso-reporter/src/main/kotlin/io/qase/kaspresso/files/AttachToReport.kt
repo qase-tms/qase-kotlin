@@ -10,7 +10,7 @@ fun File.attachScreenshotToReport(): Unit {
     attachment.filePath = this.path
     attachment.mimeType = "image/png"
 
-    Qase.listener.addAttachments(attachment)
+    Qase.listener?.addAttachments(attachment)
 }
 
 fun File.attachLogcatToReport(): Unit {
@@ -18,7 +18,7 @@ fun File.attachLogcatToReport(): Unit {
     attachment.filePath = this.path
     attachment.mimeType = "text/plain"
 
-    Qase.listener.addAttachments(attachment)
+    Qase.listener?.addAttachments(attachment)
 }
 
 fun File.attachViewHierarchyToReport(): Unit {
@@ -26,5 +26,5 @@ fun File.attachViewHierarchyToReport(): Unit {
     attachment.filePath = this.path
     attachment.mimeType = "text/xml"
 
-    Qase.listener.addAttachments(attachment)
+    Qase.listener?.addAttachments(attachment)
 }

@@ -151,10 +151,10 @@ JSON format in the
 directory.
 
 The results are stored in a specific format designed for uploading using
-the [QLI utility](https://github.com/qase-tms/qasectl). To do this, execute the following command:
+the [QaseCtl utility](https://github.com/qase-tms/qasectl). To do this, execute the following command:
 
 ```bash
-qli testops result upload --project PROJ --token <token> --id 1 --format qase --path /build/outputs/connected_android_test_additional_output/debugAndroidTest/connected/{your_device}/qase-results/results/ --verbose
+qasectl testops result upload --project PROJ --token <token> --id 1 --format qase --path /build/outputs/connected_android_test_additional_output/debugAndroidTest/connected/{your_device}/qase-results/results/ --verbose
 ```
 
 ## Requirements
