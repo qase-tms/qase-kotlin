@@ -8,8 +8,8 @@ import java.nio.file.Files
 import java.nio.file.Paths
 
 class FileWriter(path: String) : Writer {
-    private val resultsPath: String = Paths.get(path, "results").toString();
-    private val attachmentsPath: String = Paths.get(path, "attachments").toString();
+    private val resultsPath: String = Paths.get(path, "results").toString()
+    private val attachmentsPath: String = Paths.get(path, "attachments").toString()
 
     private val mapper: Json = Json {
         prettyPrint = true
@@ -23,6 +23,8 @@ class FileWriter(path: String) : Writer {
     override fun writeResult(testResult: TestResult) {
         val file = Paths.get(resultsPath, (testResult.id + ".json")).toFile()
         try {
+            // Ensure directory exists before writing
+            file.parentFile?.mkdirs()
             val json = mapper.encodeToString(TestResult.serializer(), testResult)
             file.writeText(json)
         } catch (e: IOException) {
@@ -34,6 +36,8 @@ class FileWriter(path: String) : Writer {
         if (attachment.filePath != null) {
             val file = Paths.get(attachmentsPath, attachment.id)
             try {
+                // Ensure directory exists before copying
+                file.parent?.let { Files.createDirectories(it) }
                 Files.copy(Paths.get(attachment.filePath), file)
             } catch (e: IOException) {
                 throw Exception("Could not write attachment", e)
@@ -42,6 +46,8 @@ class FileWriter(path: String) : Writer {
 
         val file = Paths.get(attachmentsPath, attachment.id).toFile()
         try {
+            // Ensure directory exists before writing
+            file.parentFile?.mkdirs()
             attachment.content?.let { file.writeBytes(it.encodeToByteArray()) }
         } catch (e: IOException) {
             throw Exception("Could not write attachment", e)
@@ -51,13 +57,21 @@ class FileWriter(path: String) : Writer {
     }
 
     private fun prepare() {
-        val resultsFolder = Paths.get(resultsPath)
-        if (!resultsFolder.toFile().exists()) {
-            resultsFolder.toFile().mkdirs()
-        }
-        val attachmentsFolder = Paths.get(attachmentsPath)
-        if (!attachmentsFolder.toFile().exists()) {
-            attachmentsFolder.toFile().mkdirs()
+        try {
+            val resultsFolder = Paths.get(resultsPath)
+            Files.createDirectories(resultsFolder)
+            val attachmentsFolder = Paths.get(attachmentsPath)
+            Files.createDirectories(attachmentsFolder)
+        } catch (e: Exception) {
+            // Fallback to mkdirs if Files.createDirectories fails
+            val resultsFolder = Paths.get(resultsPath).toFile()
+            if (!resultsFolder.exists()) {
+                resultsFolder.mkdirs()
+            }
+            val attachmentsFolder = Paths.get(attachmentsPath).toFile()
+            if (!attachmentsFolder.exists()) {
+                attachmentsFolder.mkdirs()
+            }
         }
     }
 }

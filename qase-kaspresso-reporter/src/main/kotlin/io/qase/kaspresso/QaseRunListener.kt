@@ -13,22 +13,22 @@ class QaseRunListener : KaspressoLateRunListener {
     }
 
     override fun testStarted(description: Description) {
-        Qase.listener.testStarted(description)
+        Qase.listener?.testStarted(description)
     }
 
     override fun testFinished(description: Description) {
-        Qase.listener.testFinished(description)
+        Qase.listener?.testFinished(description)
     }
 
     override fun testFailure(failure: Failure) {
-        Qase.listener.testFailure(failure)
+        Qase.listener?.testFailure(failure)
     }
 
     override fun testAssumptionFailure(failure: Failure) {
-        Qase.listener.testAssumptionFailure(failure)
+        Qase.listener?.testAssumptionFailure(failure)
     }
 
     override fun testIgnored(description: Description) {
-        Qase.listener.testIgnored(description)
+        Qase.listener?.testIgnored(description)
     }
 }

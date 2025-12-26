@@ -33,9 +33,12 @@ android {
 }
 
 dependencies {
+    api(project(":qase-kotlin-commons"))
+    api(project(":qase-kotlin-junit4"))
     implementation("androidx.test.ext:junit:1.2.1")
     implementation("androidx.test:runner:1.6.2")
-    implementation(project(":qase-kotlin-commons"))
+    implementation("androidx.multidex:multidex:2.0.1")
+    implementation("androidx.test.uiautomator:uiautomator:2.3.0")
 }
 
 tasks.register<Javadoc>("androidJavadocs") {

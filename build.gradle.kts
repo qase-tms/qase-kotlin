@@ -42,7 +42,7 @@ nexusPublishing {
 
 allprojects {
     group = "io.qase"
-    version = "1.0.0"
+    version = "1.0.1"
 
     repositories {
         mavenCentral()
@@ -139,7 +139,13 @@ configure(
     }
 
     signing {
-        sign(publishing.publications["maven"])
+        setRequired {
+            // Signing is required only if we have the signing key
+            project.hasProperty("signing.keyId") &&
+            project.hasProperty("signing.password") &&
+            project.hasProperty("signing.secretKeyRingFile")
+        }
+//        sign(publishing.publications["maven"])
     }
 }
 

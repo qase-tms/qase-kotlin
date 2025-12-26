@@ -7,15 +7,28 @@ import io.qase.commons.kotlin.models.TestResult
 import io.qase.commons.kotlin.writer.Writer
 import io.qase.commons.kotlin.writer.OutputStreamWriter
 
-class TestStorageResultsWriter : Writer {
-    private val defaultPath = "qase-results"
+class TestStorageResultsWriter(
+    resultsPath: String = "qase-results"
+) : Writer {
     @Suppress("RestrictedApi")
-    private val testStorage by lazy { TestStorage() }
+    private val testStorage by lazy { 
+        try {
+            TestStorage()
+        } catch (e: Exception) {
+            throw IllegalStateException("TestStorage is not available. Make sure you're running on a device with AndroidX Test Services.", e)
+        }
+    }
 
     @SuppressLint("RestrictedApi")
-    private val outputStreamResultsWriter = OutputStreamWriter { name ->
-        testStorage.openOutputFile("$defaultPath/$name")
-    }
+    private val outputStreamResultsWriter = OutputStreamWriter(
+        streamProvider = { name ->
+            try {
+                testStorage.openOutputFile("$resultsPath/$name")
+            } catch (e: Exception) {
+                throw IllegalStateException("Failed to open output file: $resultsPath/$name. TestStorage may not be available.", e)
+            }
+        }
+    )
 
     override fun writeResult(testResult: TestResult) {
         outputStreamResultsWriter.writeResult(testResult)
