@@ -1,5 +1,3 @@
-import java.time.Duration
-
 plugins {
     java
     signing
@@ -7,8 +5,6 @@ plugins {
 
     kotlin("jvm") version "1.9.24"
     kotlin("plugin.serialization") version "1.9.24"
-
-    id("io.github.gradle-nexus.publish-plugin") version "1.1.0"
 }
 
 buildscript {
@@ -25,20 +21,6 @@ buildscript {
 }
 
 val gradleScriptDir by extra("${rootProject.projectDir}/gradle")
-
-nexusPublishing {
-    connectTimeout.set(Duration.ofMinutes(7))
-    clientTimeout.set(Duration.ofMinutes(7))
-
-    transitionCheckOptions {
-        maxRetries.set(100)
-        delayBetween.set(Duration.ofSeconds(10))
-    }
-
-    repositories {
-        sonatype()
-    }
-}
 
 allprojects {
     group = "io.qase"
@@ -57,6 +39,7 @@ allprojects {
     }
 }
 
+// Configure JVM modules (commons, junit4)
 configure(
     subprojects
     .filter { !it.name.contains("android") }
@@ -107,6 +90,10 @@ configure(
                 artifact(sourceJar)
                 from(components["java"])
 
+                groupId = project.group.toString()
+                artifactId = project.name
+                version = project.version.toString()
+
                 pom {
                     name.set(project.name)
                     description.set("Module ${project.name} of Qase Kotlin reporters.")
@@ -125,29 +112,36 @@ configure(
                         }
                     }
                     scm {
-                        developerConnection.set("scm:git:git://github.com/qase-tms/qase-kotlin")
-                        connection.set("scm:git:git://github.com/qase-tms/qase-kotlin")
                         url.set("https://github.com/qase-tms/qase-kotlin")
                     }
-                    issueManagement {
-                        system.set("GitHub Issues")
-                        url.set("https://github.com/qase-tms/qase-kotlin/issue")
-                    }
+                }
+            }
+        }
+        
+        repositories {
+            maven {
+                name = "CentralPortal"
+                url = uri("https://central.sonatype.com/api/v1/publisher")
+                credentials {
+                    username = providers.gradleProperty("mavenCentralUsername").orElse("").get()
+                    password = providers.gradleProperty("mavenCentralPassword").orElse("").get()
                 }
             }
         }
     }
 
     signing {
+        sign(publishing.publications["maven"])
         setRequired {
             // Signing is required only if we have the signing key
             project.hasProperty("signing.keyId") &&
             project.hasProperty("signing.password") &&
             project.hasProperty("signing.secretKeyRingFile")
         }
-//        sign(publishing.publications["maven"])
     }
 }
+
+// Android modules configure the plugin themselves in afterEvaluate
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile>().configureEach {
     jvmTargetValidationMode.set(org.jetbrains.kotlin.gradle.dsl.jvm.JvmTargetValidationMode.WARNING)
