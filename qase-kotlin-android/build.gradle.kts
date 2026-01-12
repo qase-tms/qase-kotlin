@@ -7,10 +7,15 @@ plugins {
     signing
 }
 
+apply(plugin = "maven-publish")
+
 repositories {
     mavenCentral()
     google()
     mavenLocal()
+    maven {
+        url = uri("https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/")
+    }
 }
 
 android {
@@ -32,18 +37,11 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
-
-    publishing {
-        singleVariant("release") {
-            withSourcesJar()
-            withJavadocJar()
-        }
-    }
 }
 
 dependencies {
-    api(project(":qase-kotlin-commons"))
-    api(project(":qase-kotlin-junit4"))
+    implementation(project(":qase-kotlin-commons"))
+    implementation(project(":qase-kotlin-junit4"))
     implementation("androidx.test.ext:junit:1.2.1")
     implementation("androidx.test:runner:1.6.2")
     implementation("androidx.multidex:multidex:2.0.1")
@@ -88,13 +86,9 @@ afterEvaluate {
 
     publishing {
         publications {
-            create<MavenPublication>("release") {
+            create<MavenPublication>("maven") {
                 from(components["release"])
                 artifact(tasks.getByName<Jar>("androidJavadocsJar"))
-
-                groupId = project.group.toString()
-                artifactId = project.name
-                version = project.version.toString()
 
                 pom {
                     name.set(project.name)
@@ -114,25 +108,27 @@ afterEvaluate {
                         }
                     }
                     scm {
+                        developerConnection.set("scm:git:git://github.com/qase-tms/qase-kotlin")
+                        connection.set("scm:git:git://github.com/qase-tms/qase-kotlin")
                         url.set("https://github.com/qase-tms/qase-kotlin")
+                    }
+                    issueManagement {
+                        system.set("GitHub Issues")
+                        url.set("https://github.com/qase-tms/qase-kotlin/issue")
                     }
                 }
             }
-        }
-        
-        repositories {
-            maven {
-                name = "CentralPortal"
-                url = uri("https://central.sonatype.com/api/v1/publisher")
-                credentials {
-                    username = providers.gradleProperty("mavenCentralUsername").orElse("").get()
-                    password = providers.gradleProperty("mavenCentralPassword").orElse("").get()
-                }
-            }
+
         }
     }
 
     signing {
-        sign(publishing.publications["release"])
+        setRequired {
+            // Signing is required only if we have the signing key
+            project.hasProperty("signing.keyId") && 
+            project.hasProperty("signing.password") && 
+            project.hasProperty("signing.secretKeyRingFile")
+        }
+        sign(publishing.publications["maven"])
     }
 }
