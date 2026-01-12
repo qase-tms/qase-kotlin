@@ -27,6 +27,7 @@ buildscript {
 val gradleScriptDir by extra("${rootProject.projectDir}/gradle")
 
 nexusPublishing {
+    packageGroup = "io.qase"
     connectTimeout.set(Duration.ofMinutes(7))
     clientTimeout.set(Duration.ofMinutes(7))
 
@@ -37,6 +38,8 @@ nexusPublishing {
 
     repositories {
         sonatype {
+            username.set(System.getenv("ORG_GRADLE_PROJECT_sonatypeUsername"))
+            password.set(System.getenv("ORG_GRADLE_PROJECT_sonatypePassword"))
             nexusUrl.set(uri("https://ossrh-staging-api.central.sonatype.com/service/local/"))
             snapshotRepositoryUrl.set(uri("https://central.sonatype.com/repository/maven-snapshots/"))
         }
