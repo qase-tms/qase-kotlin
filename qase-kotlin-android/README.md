@@ -12,7 +12,7 @@ Add the following dependencies to your `build.gradle.kts`:
 
 ```kotlin
 dependencies {
-    androidTestImplementation("io.qase:qase-kotlin-android:1.0.0")
+    androidTestImplementation("io.qase:qase-kotlin-android:1.0.1")
 }
 ```
 
