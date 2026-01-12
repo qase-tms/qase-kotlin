@@ -38,8 +38,8 @@ nexusPublishing {
 
     repositories {
         sonatype {
-            username.set(System.getenv("ORG_GRADLE_PROJECT_sonatypeUsername"))
-            password.set(System.getenv("ORG_GRADLE_PROJECT_sonatypePassword"))
+            username = System.getenv("ORG_GRADLE_PROJECT_sonatypeUsername")
+            password = System.getenv("ORG_GRADLE_PROJECT_sonatypePassword")
             nexusUrl.set(uri("https://ossrh-staging-api.central.sonatype.com/service/local/"))
             snapshotRepositoryUrl.set(uri("https://central.sonatype.com/repository/maven-snapshots/"))
         }
