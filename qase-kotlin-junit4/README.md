@@ -8,8 +8,8 @@ Add the following dependency to your `build.gradle.kts`:
 
 ```kotlin
 dependencies {
-    testImplementation("io.qase:qase-kotlin-junit4:1.0.0")
-    testImplementation("io.qase:qase-kotlin-commons:1.0.0")
+    testImplementation("io.qase:qase-kotlin-junit4:1.0.1")
+    testImplementation("io.qase:qase-kotlin-commons:1.0.1")
 }
 ```
 
